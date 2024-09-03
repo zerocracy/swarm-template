@@ -3,7 +3,8 @@
 [![rake](https://github.com/zerocracy/swarm-template/actions/workflows/rake.yml/badge.svg)](https://github.com/zerocracy/swarm-template/actions/workflows/rake.yml)
 
 Use this repository as a template to create your own swarm of
-judges for [Zerocracy](https://www.zerocracy.com).
+[judges](https://github.com/yegor256/judges)
+for [Zerocracy](https://www.zerocracy.com).
 
 ## How to contribute
 
