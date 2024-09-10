@@ -26,6 +26,7 @@ input:
     _id: 1
     what: something-else
     when: 2024-05-12T23:54:24Z
+    hi: 'How are you?'
 expected:
   - /fb[count(f)=1]
   - /fb/f[_id=1]/hello

@@ -24,6 +24,6 @@
 
 require 'fbe/fb'
 
-Fbe.fb.query('(absent hello)').each do |f|
+Fbe.fb.query('(and (exists hi) (absent hello))').each do |f|
   f.hello = say('Hello, {name}!')
 end
