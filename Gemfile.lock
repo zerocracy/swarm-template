@@ -63,7 +63,7 @@ GEM
       net-http
     faraday-retry (2.2.1)
       faraday (~> 2.0)
-    fbe (0.0.77)
+    fbe (0.0.78)
       backtrace (~> 0)
       baza.rb (~> 0)
       decoor (~> 0)
