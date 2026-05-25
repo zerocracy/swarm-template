@@ -13,6 +13,9 @@ require_relative '../lib/say'
 # License:: MIT
 class TestSay < Minitest::Test
   def test_simple_scenario
-    assert(say('Hello, {name}!').start_with?('Hello'))
+    out = say('Hello, {name}!')
+
+    refute_includes(out, '{name}')
+    assert_match(/\AHello, (Jeff|Nicole|Peter|Sarah|John|Natasha)!\z/, out)
   end
 end

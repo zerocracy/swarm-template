@@ -16,7 +16,7 @@ desc 'Run all unit tests'
 Rake::TestTask.new(:test) do |test|
   require 'minitest/reporters'
   Minitest::Reporters.use! [Minitest::Reporters::SpecReporter.new]
-Minitest.load :minitest_reporter
+  Minitest.load_plugins
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
   test.warning = true
