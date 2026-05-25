@@ -16,7 +16,7 @@ your pull request. You will need to have
 [Bundler](https://bundler.io/) installed. Then:
 
 ```bash
-bundle up
+bundle install
 bundle exec rake
 ```
 
