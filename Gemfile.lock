@@ -93,17 +93,7 @@ GEM
       tago (~> 0.1)
       veils (~> 0.4)
       verbose (~> 0.0)
-    ffi (1.17.2-aarch64-linux-gnu)
-    ffi (1.17.2-aarch64-linux-musl)
-    ffi (1.17.2-arm-linux-gnu)
-    ffi (1.17.2-arm-linux-musl)
-    ffi (1.17.2-arm64-darwin)
-    ffi (1.17.2-x64-mingw-ucrt)
-    ffi (1.17.2-x86-linux-gnu)
-    ffi (1.17.2-x86-linux-musl)
-    ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
-    ffi (1.17.2-x86_64-linux-musl)
     fiber-storage (1.0.1)
     filesize (0.2.0)
     gli (2.22.2)
@@ -146,7 +136,6 @@ GEM
     logger (1.7.0)
     loog (0.6.1)
       logger (~> 1.0)
-    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -159,26 +148,7 @@ GEM
     multipart-post (2.4.1)
     net-http (0.8.0)
       uri (>= 0.11.1)
-    nokogiri (1.18.10)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.18.10-aarch64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.10-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.10-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.10-arm-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.10-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.10-x64-mingw-ucrt)
-      racc (~> 1.4)
-    nokogiri (1.18.10-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
     obk (0.3.2)
     octokit (10.0.0)
@@ -237,17 +207,7 @@ GEM
       simplecov (~> 0.19)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
-    sqlite3 (2.8.1-aarch64-linux-gnu)
-    sqlite3 (2.8.1-aarch64-linux-musl)
-    sqlite3 (2.8.1-arm-linux-gnu)
-    sqlite3 (2.8.1-arm-linux-musl)
-    sqlite3 (2.8.1-arm64-darwin)
-    sqlite3 (2.8.1-x64-mingw-ucrt)
-    sqlite3 (2.8.1-x86-linux-gnu)
-    sqlite3 (2.8.1-x86-linux-musl)
-    sqlite3 (2.8.1-x86_64-darwin)
     sqlite3 (2.8.1-x86_64-linux-gnu)
-    sqlite3 (2.8.1-x86_64-linux-musl)
     strscan (3.1.5)
     tago (0.6.0)
     timeout (0.5.0)
@@ -267,22 +227,8 @@ GEM
     yaml (0.4.0)
 
 PLATFORMS
-  aarch64-linux
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
-  arm64-darwin-23
-  x64-mingw-ucrt
-  x86-linux
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
   x86_64-linux
   x86_64-linux-gnu
-  x86_64-linux-musl
 
 DEPENDENCIES
   fbe (> 0)
