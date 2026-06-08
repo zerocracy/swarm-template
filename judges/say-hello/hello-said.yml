@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
 # SPDX-License-Identifier: MIT
 ---
+# Number of cycles to run the judge. First cycle: hi exists, hello absent
+# -> judge creates hello. Second cycle: both exist -> query matches nothing
+# -> no new facts. Final: 1 fact with hello set.
 runs: 2
 input:
   -
