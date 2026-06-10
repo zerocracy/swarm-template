@@ -29,5 +29,5 @@ fi
 
 self=$(cd "$(dirname "$0")" && pwd)
 
-judges update --summary --max-cycles=3 --no-log \
+judges --verbose update --quiet --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
