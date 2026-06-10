@@ -19,24 +19,11 @@ class TestEntry < Minitest::Test
     Dir.mktmpdir do |dir|
       home = File.join(dir, 'home')
       FileUtils.mkdir_p(home)
-      link_dir = File.join(dir, 'linkdir')
-      FileUtils.mkdir_p(link_dir)
-      link = File.join(link_dir, 'entry.sh')
-      FileUtils.ln_s(File.expand_path('../entry.sh', __dir__), link)
-      args = File.join(dir, 'args.txt')
-      bin = judges_stub(dir)
-      stdout, stderr, status = Open3.capture3(
-        { 'PATH' => "#{bin}:#{ENV.fetch('PATH')}", 'JUDGES_ARGS_FILE' => args },
-        link, 'job-42', home
-      )
+      link = symlink_entry(dir)
+      passed = run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: link)
 
-      assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
-      passed = File.readlines(args, chomp: true)
-      lib = passed[passed.index('--lib') + 1]
-      judges = passed[passed.index('--lib') + 2]
-
-      assert_equal(File.expand_path('../lib', __dir__), lib)
-      assert_equal(File.expand_path('../judges', __dir__), judges)
+      assert_equal(File.expand_path('../lib', __dir__), passed[passed.index('--lib') + 1])
+      assert_equal(File.expand_path('../judges', __dir__), passed[passed.index('--lib') + 2])
     end
   end
 
@@ -65,13 +52,21 @@ class TestEntry < Minitest::Test
     bin
   end
 
-  def run_entry(bin, home, args)
+  def run_entry(bin, home, args, script: './entry.sh')
     stdout, stderr, status = Open3.capture3(
       { 'PATH' => "#{bin}:#{ENV.fetch('PATH')}", 'JUDGES_ARGS_FILE' => args },
-      './entry.sh', 'job-42', home
+      script, 'job-42', home
     )
 
     assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
     File.readlines(args, chomp: true)
+  end
+
+  def symlink_entry(dir)
+    link_dir = File.join(dir, 'linkdir')
+    FileUtils.mkdir_p(link_dir)
+    link = File.join(link_dir, 'entry.sh')
+    FileUtils.ln_s(File.expand_path('../entry.sh', __dir__), link)
+    link
   end
 end
