@@ -19,12 +19,16 @@ class TestEntry < Minitest::Test
     Dir.mktmpdir do |dir|
       home = File.join(dir, 'home')
       FileUtils.mkdir_p(home)
-      link = symlink_entry(dir)
-      passed = run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: link)
 
-      assert_equal(File.expand_path('../lib', __dir__), passed[passed.index('--lib') + 1])
-      assert_equal(File.expand_path('../judges', __dir__), passed[passed.index('--lib') + 2])
+      assert_real_path_used(
+        run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: symlink_entry(dir))
+      )
     end
+  end
+
+  def assert_real_path_used(passed)
+    assert_equal(File.expand_path('../lib', __dir__), passed[passed.index('--lib') + 1])
+    assert_equal(File.expand_path('../judges', __dir__), passed[passed.index('--lib') + 2])
   end
 
   def test_forwards_job_id_to_judges_options
