@@ -27,7 +27,7 @@ if ! command -v judges &>/dev/null; then
   exit 1
 fi
 
-self=$(cd "$(dirname "$0")" && pwd)
+self=$(dirname "$(readlink -f "$0")")
 
 judges --verbose update --quiet --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
