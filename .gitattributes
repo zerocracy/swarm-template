@@ -1,0 +1,11 @@
+* text=auto eol=lf
+*.rb text
+*.yml text
+*.yaml text
+*.sh text
+*.md text
+*.json text
+Gemfile.lock -diff linguist-generated
+Dockerfile text
+.gitattributes text
+.gitignore text

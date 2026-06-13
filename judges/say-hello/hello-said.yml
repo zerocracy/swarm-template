@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
 # SPDX-License-Identifier: MIT
 ---
+# Number of cycles to run the judge. First cycle: hi exists, hello absent
+# -> judge creates hello. Second cycle: both exist -> query matches nothing
+# -> no new facts. Final: 1 fact with hello set.
 runs: 2
 input:
   -
@@ -10,4 +13,7 @@ input:
     hi: 'How are you?'
 expected:
   - /fb[count(f)=1]
-  - /fb/f[_id=1]/hello
+  - >-
+    /fb/f[_id=1 and (hello="Hello, Jeff!" or hello="Hello, Nicole!" or
+    hello="Hello, Peter!" or hello="Hello, Sarah!" or hello="Hello, John!" or
+    hello="Hello, Natasha!")]

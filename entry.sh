@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
 # SPDX-License-Identifier: MIT
 
-set -ex
+set -e
 set -o pipefail
 
 id=$1
@@ -17,7 +17,17 @@ if [ -z "${home}" ]; then
   exit 1
 fi
 
-self=$(dirname "$0")
+if [ ! -d "${home}" ]; then
+  echo "Directory '${home}' does not exist"
+  exit 1
+fi
 
-judges --verbose update --quiet --summary --max-cycles=3 --no-log \
+if ! command -v judges &>/dev/null; then
+  echo "'judges' executable not found. Make sure the 'judges' gem is installed."
+  exit 1
+fi
+
+self=$(dirname "$(readlink -f "$0")")
+
+judges update --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
