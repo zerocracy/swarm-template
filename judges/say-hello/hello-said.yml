@@ -13,4 +13,7 @@ input:
     hi: 'How are you?'
 expected:
   - /fb[count(f)=1]
-  - /fb/f[_id=1]/hello
+  - >-
+    /fb/f[_id=1 and (hello="Hello, Jeff!" or hello="Hello, Nicole!" or
+    hello="Hello, Peter!" or hello="Hello, Sarah!" or hello="Hello, John!" or
+    hello="Hello, Natasha!")]
