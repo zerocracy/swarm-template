@@ -15,6 +15,22 @@ class TestEntry < Minitest::Test
     File.write(ENV.fetch('JUDGES_ARGS_FILE'), ARGV.join("\n"))
   RUBY
 
+  def test_resolves_real_path_when_invoked_via_symlink
+    Dir.mktmpdir do |dir|
+      home = File.join(dir, 'home')
+      FileUtils.mkdir_p(home)
+
+      assert_real_path_used(
+        run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: symlink_entry(dir))
+      )
+    end
+  end
+
+  def assert_real_path_used(passed)
+    assert_equal(File.expand_path('../lib', __dir__), passed[passed.index('--lib') + 1])
+    assert_equal(File.expand_path('../judges', __dir__), passed[passed.index('--lib') + 2])
+  end
+
   def test_forwards_job_id_to_judges_options
     Dir.mktmpdir do |dir|
       home = File.join(dir, 'home')
@@ -40,13 +56,21 @@ class TestEntry < Minitest::Test
     bin
   end
 
-  def run_entry(bin, home, args)
+  def run_entry(bin, home, args, script: './entry.sh')
     stdout, stderr, status = Open3.capture3(
       { 'PATH' => "#{bin}:#{ENV.fetch('PATH')}", 'JUDGES_ARGS_FILE' => args },
-      './entry.sh', 'job-42', home
+      script, 'job-42', home
     )
 
     assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
     File.readlines(args, chomp: true)
+  end
+
+  def symlink_entry(dir)
+    link_dir = File.join(dir, 'linkdir')
+    FileUtils.mkdir_p(link_dir)
+    link = File.join(link_dir, 'entry.sh')
+    FileUtils.ln_s(File.expand_path('../entry.sh', __dir__), link)
+    link
   end
 end
