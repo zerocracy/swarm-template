@@ -15,7 +15,7 @@ based on business rules. Judges run in cycles until no new facts are produced.
 
 ## Project Structure
 
-```text
+```
 judges/<name>/<name>.rb     — judge implementation, auto-discovered
 judges/<name>/<name>.yml    — YAML test for the judge (data-driven)
 lib/                        — shared Ruby libraries
@@ -41,7 +41,7 @@ bundle exec rake
 mkdir judges/hello-world
 ```
 
-1. Write the judge logic in `judges/hello-world/hello-world.rb`:
+2. Write the judge logic in `judges/hello-world/hello-world.rb`:
 
 ```ruby
 # frozen_string_literal: true
@@ -56,7 +56,7 @@ Fbe.fb.query('(and (exists hi) (absent hello))').each do |f|
 end
 ```
 
-1. Write a YAML test in `judges/hello-world/hello-world.yml`:
+3. Write a YAML test in `judges/hello-world/hello-world.yml`:
 
 ```yaml
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
@@ -74,13 +74,13 @@ expected:
   - /fb/f[_id=1]/hello
 ```
 
-1. Run the judge YAML tests:
+4. Run the judge YAML tests:
 
 ```bash
 bundle exec judges test --no-log --disable live --lib lib judges
 ```
 
-1. Run the full build:
+5. Run the full build:
 
 ```bash
 bundle exec rake
@@ -91,10 +91,10 @@ If everything is clean, your judge is ready.
 ## Commands
 
 | Command | Purpose |
-| --- | --- |
+|---------|---------|
 | `bundle exec rake` | Full build (test + judges + rubocop) |
 | `bundle exec rake test` | Ruby unit tests only |
-| \`bundle exec judges test --no-log --disable live\` | Judge YAML tests |
+| `bundle exec judges test --no-log --disable live --lib lib judges` | Judge YAML tests |
 | `bundle exec rubocop` | Code style check |
 | `docker build -t swarm .` | Build Docker image (requires Dockerfile) |
 
