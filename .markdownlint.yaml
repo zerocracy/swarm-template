@@ -1,0 +1,5 @@
+# SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
+# SPDX-License-Identifier: MIT
+default: true
+MD013:
+  line_length: 120
