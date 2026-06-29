@@ -27,7 +27,16 @@ if ! command -v judges &>/dev/null; then
   exit 1
 fi
 
-self=$(dirname "$(readlink -f "$0")")
+# Portable abspath: resolves symlinks, works on Linux and macOS
+abspath() {
+  local target="$1"
+  while [ -L "${target}" ]; do
+    target=$(readlink "${target}")
+  done
+  cd "$(dirname "${target}")" 2>/dev/null && pwd -P
+}
+
+self=$(abspath "$0")
 
 judges update --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
