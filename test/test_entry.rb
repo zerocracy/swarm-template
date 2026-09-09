@@ -3,6 +3,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2024-2026 Zerocracy
 # SPDX-License-Identifier: MIT
 
+require 'factbase'
 require 'fileutils'
 require 'open3'
 require 'tmpdir'
@@ -45,7 +46,28 @@ class TestEntry < Minitest::Test
     end
   end
 
+  def test_runs_judges_and_writes_a_summary
+    Dir.mktmpdir do |dir|
+      path = File.join(dir, 'base.fb')
+      write_initial_factbase(path)
+      stdout, stderr, status = Open3.capture3('./entry.sh', 'job-42', dir)
+
+      assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
+      updated = Factbase.new
+      updated.import(File.binread(path))
+
+      assert_equal(1, updated.query('(exists hello)').count)
+      assert_equal(1, updated.query('(eq what "judges-summary")').count)
+    end
+  end
+
   private
+
+  def write_initial_factbase(path)
+    fb = Factbase.new
+    fb.insert.hi = 'How are you?'
+    File.binwrite(path, fb.export)
+  end
 
   def judges_stub(dir)
     bin = File.join(dir, 'bin')
