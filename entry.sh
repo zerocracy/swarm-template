@@ -13,7 +13,7 @@ fi
 
 home=$2
 if [ -z "${home}" ]; then
-  echo "The second argument must be the directory where 'base.fb' is located"
+  echo "The second argument must be the directory with the factbase"
   exit 1
 fi
 
@@ -21,6 +21,8 @@ if [ ! -d "${home}" ]; then
   echo "Directory '${home}' does not exist"
   exit 1
 fi
+
+fb_file=${3:-${FB_FILE:-base.fb}}
 
 if ! command -v judges &>/dev/null; then
   echo "'judges' executable not found. Make sure the 'judges' gem is installed."
@@ -30,4 +32,4 @@ fi
 self=$(dirname "$(readlink -f "$0")")
 
 judges update --summary --max-cycles=3 --no-log \
-       --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
+       --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/${fb_file}"
