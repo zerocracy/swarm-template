@@ -7,6 +7,8 @@ $stdout.sync = true
 
 require 'simplecov'
 SimpleCov.start
+SimpleCov.minimum_coverage 100
+SimpleCov.refuse_coverage_drop
 
 require 'simplecov-cobertura'
 SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
