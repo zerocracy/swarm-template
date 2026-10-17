@@ -5,8 +5,8 @@
 
 source 'https://rubygems.org'
 
-gem 'fbe', '>0'
-gem 'judges', '>0', require: false
+gem 'fbe', '~>0'
+gem 'judges', '~>0', require: false
 gem 'minitest', '~>6.0', require: false
 gem 'minitest-reporters', '~>1.7', require: false
 gem 'rake', '~>13.2', require: false
