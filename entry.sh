@@ -7,23 +7,23 @@ set -o pipefail
 
 id=$1
 if [ -z "${id}" ]; then
-  echo "The first argument must be the ID of the job to process"
+  echo "The first argument must be the ID of the job to process" >&2
   exit 1
 fi
 
 home=$2
 if [ -z "${home}" ]; then
-  echo "The second argument must be the directory where 'base.fb' is located"
+  echo "The second argument must be the directory where 'base.fb' is located" >&2
   exit 1
 fi
 
 if [ ! -d "${home}" ]; then
-  echo "Directory '${home}' does not exist"
+  echo "Directory '${home}' does not exist" >&2
   exit 1
 fi
 
 if ! command -v judges &>/dev/null; then
-  echo "'judges' executable not found. Make sure the 'judges' gem is installed."
+  echo "'judges' executable not found. Make sure the 'judges' gem is installed." >&2
   exit 1
 fi
 
