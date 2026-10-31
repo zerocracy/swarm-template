@@ -40,7 +40,7 @@ class TestEntry < Minitest::Test
 
       assert_includes(passed, 'update')
       assert_includes(passed, '--option')
-      assert_includes(passed, 'id=job-42')
+      assert_equal(%w[id=job-42 job_id=job-42], passed.grep(/\A(?:job_)?id=/))
       assert_equal("#{home}/base.fb", passed.last)
     end
   end
