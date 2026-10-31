@@ -29,5 +29,20 @@ fi
 
 self=$(dirname "$(readlink -f "$0")")
 
-judges update --summary --max-cycles=3 --no-log \
-       --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
+set +e
+output=$(judges update --summary --max-cycles=3 --no-log \
+  --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb" 2>&1)
+# shellcheck disable=SC2181
+exit_code=$?
+set -e
+
+echo "${output}"
+
+if [ "${exit_code}" -eq 0 ] && echo "${output}" | grep -q "Too many cycles already"; then
+  echo "[FATAL] judges finished 3 cycle(s) without convergence. \
+The factbase kept changing until --max-cycles was exhausted. \
+Check judge logic or consider increasing --max-cycles."
+  exit 75
+fi
+
+exit "${exit_code}"
