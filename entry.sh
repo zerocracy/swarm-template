@@ -5,6 +5,15 @@
 set -e
 set -o pipefail
 
+start_time=$(date +%s)
+
+cleanup() {
+  elapsed=$(($(date +%s) - start_time))
+  echo "Job ${id} terminated after ${elapsed}s"
+  exit 143
+}
+trap cleanup SIGTERM
+
 id=$1
 if [ -z "${id}" ]; then
   echo "The first argument must be the ID of the job to process"
