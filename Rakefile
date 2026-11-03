@@ -24,7 +24,7 @@ end
 desc 'Test all judges'
 task :judges do
   live = ARGV.include?('--live') ? '' : '--disable live'
-  sh "judges #{ARGV.include?('--verbose') ? '--verbose' : ''} test --no-log #{live} --lib lib judges"
+  sh "judges #{'--verbose' if ARGV.include?('--verbose')} test --no-log #{live} --lib lib judges"
 end
 
 require 'rubocop/rake_task'
