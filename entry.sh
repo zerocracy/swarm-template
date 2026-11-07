@@ -30,4 +30,5 @@ fi
 self=$(dirname "$(readlink -f "$0")")
 
 judges update --summary --max-cycles=3 --no-log \
-       --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
+       --option "id=${id}" --option "job_id=${id}" \
+       --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
