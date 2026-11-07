@@ -21,9 +21,7 @@ class TestEntry < Minitest::Test
       home = File.join(dir, 'home')
       FileUtils.mkdir_p(home)
 
-      assert_real_path_used(
-        run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: symlink_entry(dir))
-      )
+      assert_real_path_used(run_entry(judges_stub(dir), home, File.join(dir, 'args.txt'), script: symlink_entry(dir)))
     end
   end
 
@@ -41,6 +39,31 @@ class TestEntry < Minitest::Test
       passed = run_entry(bin, File.join(dir, 'home'), File.join(dir, 'args.txt'), script: script, chdir: dir)
 
       assert_real_path_used(passed)
+    end
+  end
+
+  def test_resolves_slashless_script_name_found_through_path
+    Dir.mktmpdir do |dir|
+      bin = judges_stub(dir)
+      FileUtils.ln_s(File.expand_path('../entry.sh', __dir__), File.join(bin, 'entry.sh'))
+      home = File.join(dir, 'home')
+      cwd = File.join(dir, 'cwd')
+      FileUtils.mkdir_p([home, cwd])
+      passed = run_entry(bin, home, File.join(dir, 'args.txt'), script: %w[bash entry.sh], chdir: cwd)
+
+      assert_real_path_used(passed)
+    end
+  end
+
+  def test_keeps_own_directory_when_slashless_script_is_not_in_path
+    Dir.mktmpdir do |dir|
+      FileUtils.cp(File.expand_path('../entry.sh', __dir__), File.join(dir, 'entry.sh'))
+      FileUtils.mkdir_p(%w[lib judges home].map { |name| File.join(dir, name) })
+      passed = run_entry(
+        judges_stub(dir), "#{dir}/home", "#{dir}/args.txt", script: %w[bash entry.sh], chdir: dir
+      )
+
+      assert_equal(File.join(File.realpath(dir), 'lib'), passed[passed.index('--lib') + 1])
     end
   end
 
@@ -72,7 +95,7 @@ class TestEntry < Minitest::Test
   def run_entry(bin, home, args, script: './entry.sh', chdir: Dir.pwd)
     stdout, stderr, status = Open3.capture3(
       { 'PATH' => "#{bin}:#{ENV.fetch('PATH')}", 'JUDGES_ARGS_FILE' => args },
-      script, 'job-42', home, chdir: chdir
+      *script, 'job-42', home, chdir: chdir
     )
 
     assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
@@ -80,9 +103,8 @@ class TestEntry < Minitest::Test
   end
 
   def symlink_entry(dir)
-    link_dir = File.join(dir, 'linkdir')
-    FileUtils.mkdir_p(link_dir)
-    link = File.join(link_dir, 'entry.sh')
+    link = File.join(dir, 'linkdir', 'entry.sh')
+    FileUtils.mkdir_p(File.dirname(link))
     FileUtils.ln_s(File.expand_path('../entry.sh', __dir__), link)
     link
   end
@@ -91,10 +113,7 @@ class TestEntry < Minitest::Test
     stub = File.join(bin, 'readlink')
     File.write(stub, <<~SH)
       #!/bin/sh
-      if [ "$1" = '-f' ]; then
-        echo 'readlink: illegal option -- f' >&2
-        exit 1
-      fi
+      [ "$1" = '-f' ] && { echo 'readlink: illegal option -- f' >&2; exit 1; }
       exec /usr/bin/readlink "$@"
     SH
     FileUtils.chmod(0o755, stub)
@@ -105,11 +124,9 @@ class TestEntry < Minitest::Test
     second = File.join(dir, 'second')
     FileUtils.mkdir_p([first, second])
     FileUtils.ln_s('../second/entry.sh', File.join(first, 'entry.sh'))
-    FileUtils.ln_s(
-      Pathname.new(File.expand_path('../entry.sh', __dir__))
-              .relative_path_from(Pathname.new(File.realpath(second))),
-      File.join(second, 'entry.sh')
-    )
+    real = File.realpath(second)
+    rel = Pathname.new(File.expand_path('../entry.sh', __dir__)).relative_path_from(Pathname.new(real))
+    FileUtils.ln_s(rel, File.join(second, 'entry.sh'))
     File.join(first, 'entry.sh')
   end
 end

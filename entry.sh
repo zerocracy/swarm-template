@@ -28,6 +28,11 @@ if ! command -v judges &>/dev/null; then
 fi
 
 self=$0
+# bash passes a slashless $0 when the script is found via PATH; resolve it
+# unless a same-named file in cwd is what bash actually opened.
+if [ ! -f "${self}" ] && resolved=$(command -v -- "${self}"); then
+  self=${resolved}
+fi
 while [ -L "${self}" ]; do
   link=$(readlink "${self}")
   case "${link}" in
