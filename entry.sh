@@ -27,7 +27,15 @@ if ! command -v judges &>/dev/null; then
   exit 1
 fi
 
-self=$(dirname "$(readlink -f "$0")")
+self=$0
+while [ -L "${self}" ]; do
+  link=$(readlink "${self}")
+  case "${link}" in
+    /*) self=${link} ;;
+    *) self=$(dirname "${self}")/${link} ;;
+  esac
+done
+self=$(cd "$(dirname "${self}")" && pwd -P)
 
 judges update --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
