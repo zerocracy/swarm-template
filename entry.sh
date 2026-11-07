@@ -29,5 +29,7 @@ fi
 
 self=$(dirname "$(readlink -f "$0")")
 
+echo "Job ${id} started at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 judges update --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
+echo "Job ${id} finished at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
