@@ -45,7 +45,29 @@ class TestEntry < Minitest::Test
     end
   end
 
+  def test_updates_a_factbase_with_the_real_judges_command
+    Dir.mktmpdir do |dir|
+      input = File.join(dir, 'input.yml')
+      base = File.join(dir, 'base.fb')
+      File.write(input, "- hi: 'How are you?'\n")
+      real_judges('import', input, base)
+      stdout, stderr, status = Open3.capture3('./entry.sh', 'job-42', dir)
+
+      assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
+      real_judges('print', '--format=json', base, "#{base}.json")
+
+      assert_match(/Hello, \w+!/, File.read("#{base}.json"))
+    end
+  end
+
   private
+
+  def real_judges(*)
+    stdout, stderr, status = Open3.capture3('judges', *)
+
+    assert_predicate(status, :success?, "#{stdout}\n#{stderr}")
+    stdout
+  end
 
   def judges_stub(dir)
     bin = File.join(dir, 'bin')
