@@ -15,6 +15,22 @@ class TestEntry < Minitest::Test
     File.write(ENV.fetch('JUDGES_ARGS_FILE'), ARGV.join("\n"))
   RUBY
 
+  # Models a chain A→B→C→D→E plus the confirming cycle, so it needs five cycles.
+  CHAIN_STUB = <<~'RUBY'
+    #!/usr/bin/env ruby
+    File.write(ENV.fetch('JUDGES_ARGS_FILE'), ARGV.join("\n"))
+    args = ARGV.dup
+    cap = 8
+    while (arg = args.shift)
+      if arg.start_with?('--max-cycles=')
+        cap = arg.split('=', 2).last.to_i
+      elsif arg == '--max-cycles'
+        cap = args.shift.to_i
+      end
+    end
+    abort("chain needs 5 cycles, got #{cap}") if cap < 5
+  RUBY
+
   def test_resolves_real_path_when_invoked_via_symlink
     Dir.mktmpdir do |dir|
       home = File.join(dir, 'home')
@@ -29,6 +45,14 @@ class TestEntry < Minitest::Test
   def assert_real_path_used(passed)
     assert_equal(File.expand_path('../lib', __dir__), passed[passed.index('--lib') + 1])
     assert_equal(File.expand_path('../judges', __dir__), passed[passed.index('--lib') + 2])
+  end
+
+  def test_allows_chain_longer_than_three_cycles
+    Dir.mktmpdir do |dir|
+      home = File.join(dir, 'home')
+      FileUtils.mkdir_p(home)
+      run_entry(judges_stub(dir, CHAIN_STUB), home, File.join(dir, 'args.txt'))
+    end
   end
 
   def test_forwards_job_id_to_judges_options
@@ -47,11 +71,11 @@ class TestEntry < Minitest::Test
 
   private
 
-  def judges_stub(dir)
+  def judges_stub(dir, source = JUDGES_STUB)
     bin = File.join(dir, 'bin')
     FileUtils.mkdir_p(bin)
     stub = File.join(bin, 'judges')
-    File.write(stub, JUDGES_STUB)
+    File.write(stub, source)
     FileUtils.chmod(0o755, stub)
     bin
   end
