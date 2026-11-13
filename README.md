@@ -20,7 +20,7 @@ judges/<name>/<name>.rb     — judge implementation, auto-discovered
 judges/<name>/<name>.yml    — YAML test for the judge (data-driven)
 lib/                        — shared Ruby libraries
 test/test_*.rb              — Minitest unit tests
-entry.sh                    — Docker entry point
+entry.sh                    — job entry point
 ```
 
 ## Quick Start
@@ -97,8 +97,10 @@ If everything is clean, your judge is ready.
 | `bundle exec rake test` | Ruby unit tests only |
 | `bundle exec judges test --no-log --disable live --lib lib judges` | Judge YAML tests |
 | `bundle exec rubocop` | Code style check |
-| `docker build -t swarm .` | Build Docker image (requires Dockerfile) |
 <!-- markdownlint-enable MD013 -->
+
+Container packaging is not included in this template. Add a Dockerfile suited
+to your runtime before using `docker build`.
 
 ## How to Contribute
 
