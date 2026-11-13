@@ -29,5 +29,15 @@ fi
 
 self=$(dirname "$(readlink -f "$0")")
 
+heartbeat_interval="${HEARTBEAT_INTERVAL:-60}"
+(
+  while true; do
+    sleep "${heartbeat_interval}"
+    echo "[heartbeat] Job ${id} is still running at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  done
+) &
+heartbeat_pid=$!
+trap 'kill "${heartbeat_pid}" 2>/dev/null || true' EXIT
+
 judges update --summary --max-cycles=3 --no-log \
        --option "id=${id}" --lib "${self}/lib" "${self}/judges" "${home}/base.fb"
