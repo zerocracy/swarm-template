@@ -27,6 +27,9 @@ if ! command -v judges &>/dev/null; then
   exit 1
 fi
 
+echo "judges: $(judges --version 2>&1)"
+echo "fbe: $(ruby -e 'puts Gem::Specification.find_by_name(%(fbe)).version' 2>/dev/null || echo 'unknown')"
+
 self=$(dirname "$(readlink -f "$0")")
 
 judges update --summary --max-cycles=3 --no-log \
